@@ -1,0 +1,13 @@
+<div class="sidebar-content">
+    <div class="user-info">
+      <h4 *ngIf="userProfile">{{ userProfile.username }}</h4>
+      <p *ngIf="userProfile">{{ userProfile.email }}</p>
+      <p *ngIf="errorMessage" class="text-danger">{{ errorMessage }}</p>
+    </div>
+  
+    <div class="logout">
+      <button class="btn btn-danger w-100" (click)="logout()">
+        <i class="fas fa-sign-out-alt me-2"></i> Logout
+      </button>
+    </div>
+  </div>

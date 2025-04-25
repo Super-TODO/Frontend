@@ -1,0 +1,35 @@
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card p-4" style="width: 400px;">
+      <h3 class="card-title text-center">Verify OTP</h3>
+      <p class="text-center">An OTP has been sent to {{ email || 'your email' }}.</p>
+      <form [formGroup]="otpForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="otpCode" class="form-label">OTP Code</label>
+          <input
+            type="text"
+            class="form-control"
+            id="otpCode"
+            formControlName="otpCode"
+            [class.is-invalid]="otpForm.get('otpCode')?.invalid && otpForm.get('otpCode')?.touched"
+          />
+          <div *ngIf="otpForm.get('otpCode')?.hasError('required') && otpForm.get('otpCode')?.touched" class="invalid-feedback">
+            OTP is required
+          </div>
+        </div>
+  
+        <button type="submit" class="btn btn-primary w-100" [disabled]="otpForm.invalid">
+          Verify OTP
+        </button>
+      </form>
+  
+      <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+        {{ errorMessage }}
+      </div>
+  
+      <div class="text-center mt-3">
+        <a routerLink="/register" class="btn btn-outline-primary w-100">
+          Back to Register
+        </a>
+      </div>
+    </div>
+  </div>

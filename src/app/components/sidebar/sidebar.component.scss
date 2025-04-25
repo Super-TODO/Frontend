@@ -1,0 +1,48 @@
+.sidebar-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 30px 20px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #adc7f0 100%); 
+    color: #333;
+  }
+  
+  .user-info {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  .user-info h4 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #2c3e50;
+    letter-spacing: 0.5px;
+  }
+  
+  .user-info p {
+    margin: 8px 0 0;
+    font-size: 1rem;
+    color: #7f8c8d;
+    font-style: italic;
+  }
+  
+  .logout {
+    margin-top: auto;
+    padding: 0 10px;
+  }
+  
+  .btn-danger {
+    padding: 12px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    border-radius: 8px;
+    background-color: #e74c3c;
+    border: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .btn-danger:hover {
+    background-color: #c0392b;
+    transform: scale(1.02);
+  }

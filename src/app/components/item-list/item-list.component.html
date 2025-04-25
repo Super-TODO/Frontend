@@ -1,0 +1,89 @@
+<div class="container-fluid position-relative">
+  <!-- Hamburger Menu Button -->
+  <button class="hamburger-btn btn btn-link" (click)="toggleSidebar()">
+    <i class="fas fa-bars hamburger-icon"></i>
+  </button>
+
+  <!-- Sidebar -->
+  <div class="sidebar" [ngClass]="{'open': isSidebarOpen}">
+    <app-sidebar></app-sidebar>
+  </div>
+  
+  <!-- Main Content -->
+  <div class="content mt-4">
+    <h2>Item List</h2>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Search Bar -->
+    <div class="mb-3">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Search by title or description..."
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchChange()"
+      />
+    </div>
+
+    <!-- Filters -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="statusFilter" class="form-label">Filter by Status:</label>
+        <select
+          id="statusFilter"
+          class="form-select"
+          [(ngModel)]="statusFilter"
+          (ngModelChange)="onStatusFilterChange()"
+        >
+          <option value="">All</option>
+          <option value="TODO">To Do</option>
+          <option value="IN_PROGRESS">In Progress</option>
+          <option value="DONE">Done</option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label for="priorityFilter" class="form-label">Filter by Priority:</label>
+        <select
+          id="priorityFilter"
+          class="form-select"
+          [(ngModel)]="priorityFilter"
+          (ngModelChange)="onPriorityFilterChange()"
+        >
+          <option value="">All</option>
+          <option value="LOW">Low</option>
+          <option value="MEDIUM">Medium</option>
+          <option value="HIGH">High</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Items Table -->
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Priority</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of filteredItems">
+          <td>{{ item.id }}</td>
+          <td>{{ item.title }}</td>
+          <td>{{ item.description }}</td>
+          <td>{{ item.status }}</td>
+          <td>{{ item.priority }}</td>
+        </tr>
+        <tr *ngIf="filteredItems.length === 0 && !errorMessage">
+          <td colspan="5" class="text-center">No items found.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
