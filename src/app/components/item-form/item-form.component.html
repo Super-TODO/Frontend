@@ -1,0 +1,70 @@
+<div class="item-form">
+    <h3>{{ item ? 'Update Item' : 'Add Item' }}</h3>
+    <form (ngSubmit)="onSubmit()">
+      <!-- Title -->
+      <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input
+          type="text"
+          id="title"
+          class="form-control"
+          [(ngModel)]="itemForm.title"
+          name="title"
+          required
+        />
+      </div>
+  
+      <!-- Description -->
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea
+          id="description"
+          class="form-control"
+          [(ngModel)]="itemForm.description"
+          name="description"
+          rows="3"
+          required
+        ></textarea>
+      </div>
+  
+      <!-- Status -->
+      <div class="mb-3">
+        <label for="status" class="form-label">Status</label>
+        <select
+          id="status"
+          class="form-select"
+          [(ngModel)]="itemForm.status"
+          name="status"
+          required
+        >
+          <option *ngFor="let status of statuses" [value]="status">
+            {{ status }}
+          </option>
+        </select>
+      </div>
+  
+      <!-- Priority -->
+      <div class="mb-3">
+        <label for="priority" class="form-label">Priority</label>
+        <select
+          id="priority"
+          class="form-select"
+          [(ngModel)]="itemForm.priority"
+          name="priority"
+          required
+        >
+          <option *ngFor="let priority of priorities" [value]="priority">
+            {{ priority }}
+          </option>
+        </select>
+      </div>
+  
+      <!-- Buttons -->
+      <div class="d-flex justify-content-end gap-2">
+        <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+        <button type="submit" class="btn btn-primary">
+          {{ item ? 'Update' : 'Add' }}
+        </button>
+      </div>
+    </form>
+  </div>

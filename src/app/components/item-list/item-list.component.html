@@ -8,7 +8,7 @@
   <div class="sidebar" [ngClass]="{'open': isSidebarOpen}">
     <app-sidebar></app-sidebar>
   </div>
-  
+
   <!-- Main Content -->
   <div class="content mt-4">
     <h2>Item List</h2>
@@ -16,6 +16,22 @@
     <!-- Error Message -->
     <div *ngIf="errorMessage" class="alert alert-danger">
       {{ errorMessage }}
+    </div>
+
+    <!-- Add Item Button -->
+    <div class="mb-3">
+      <button class="btn btn-success" (click)="showAddForm()">
+        <i class="fas fa-plus me-2"></i> Add Item
+      </button>
+    </div>
+
+    <!-- Item Form (for Add/Update) -->
+    <div *ngIf="showForm" class="mb-4">
+      <app-item-form
+        [item]="selectedItem"
+        (formSubmit)="onFormSubmit($event)"
+        (formCancel)="onFormCancel()"
+      ></app-item-form>
     </div>
 
     <!-- Search Bar -->
@@ -65,20 +81,27 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>ID</th>
           <th>Title</th>
           <th>Description</th>
           <th>Status</th>
           <th>Priority</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let item of filteredItems">
-          <td>{{ item.id }}</td>
           <td>{{ item.title }}</td>
           <td>{{ item.description }}</td>
           <td>{{ item.status }}</td>
           <td>{{ item.priority }}</td>
+          <td>
+            <button class="btn btn-sm btn-primary me-2" (click)="showUpdateForm(item)">
+              <i class="fas fa-edit me-1"></i> Update
+            </button>
+            <button class="btn btn-sm btn-danger" (click)="deleteItem(item.id)">
+              <i class="fas fa-trash me-1"></i> Delete
+            </button>
+          </td>
         </tr>
         <tr *ngIf="filteredItems.length === 0 && !errorMessage">
           <td colspan="5" class="text-center">No items found.</td>

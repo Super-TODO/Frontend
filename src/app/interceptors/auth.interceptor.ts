@@ -40,7 +40,7 @@ function handle401Error(
   if (!refreshToken) {
     authService.clearTokens();
     router.navigate(['/login']);
-    return throwError(() => new Error('Refresh token is missing'));
+    return throwError(() => new Error('Refresh token missing'));
   }
 
   return authService.refreshToken({ refreshToken }).pipe(
@@ -53,10 +53,10 @@ function handle401Error(
       });
       return next(newReq);
     }),
-    catchError((error) => {
+    catchError(() => {
       authService.clearTokens();
       router.navigate(['/login']);
-      return throwError(() => error);
+      return throwError(() => new Error('Refresh failed'));
     })
   );
 }

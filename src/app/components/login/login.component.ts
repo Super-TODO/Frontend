@@ -9,11 +9,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterModule
-  ]
+  imports: [CommonModule, ReactiveFormsModule, RouterModule]
 })
 export class LoginComponent {
   loginForm: FormGroup;
@@ -36,13 +32,13 @@ export class LoginComponent {
         next: (response) => {
           this.authService.saveTokens(response);
           this.errorMessage = null;
-          this.router.navigate(['/item-list']); 
+          this.router.navigate(['/item-list']);
         },
         error: (error) => {
           if (error.status === 401) {
-            this.errorMessage = 'Invalid email or password';
+            this.errorMessage = error.error?.error || 'Invalid email or password';
           } else {
-            this.errorMessage = 'An error occurred. Please try again later.';
+            this.errorMessage = error.error?.error || error.error?.message || 'An error occurred. Please try again.';
           }
         }
       });

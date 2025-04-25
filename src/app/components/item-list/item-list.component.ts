@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ItemResponse, Status, Priority } from '../../models/item.model';
+import { ItemRequest, ItemResponse, Status, Priority } from '../../models/item.model';
 import { ItemService } from '../../services/item.service';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SidebarComponent } from '../sidebar/sidebar.component';
+import { ItemFormComponent } from '../item-form/item-form.component';
 
 @Component({
   selector: 'app-item-list',
@@ -15,7 +16,8 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
   imports: [
     CommonModule,
     FormsModule,
-    SidebarComponent
+    SidebarComponent,
+    ItemFormComponent
   ]
 })
 export class ItemListComponent implements OnInit {
@@ -25,7 +27,9 @@ export class ItemListComponent implements OnInit {
   statusFilter: Status | '' = '';
   priorityFilter: Priority | '' = '';
   errorMessage: string | null = null;
-  isSidebarOpen: boolean = false; 
+  isSidebarOpen: boolean = false;
+  showForm: boolean = false;
+  selectedItem: ItemResponse | null = null;
 
   constructor(
     private itemService: ItemService,
@@ -83,5 +87,65 @@ export class ItemListComponent implements OnInit {
 
   toggleSidebar(): void {
     this.isSidebarOpen = !this.isSidebarOpen;
+  }
+
+  showAddForm(): void {
+    this.selectedItem = null;
+    this.showForm = true;
+  }
+
+  showUpdateForm(item: ItemResponse): void {
+    this.selectedItem = item;
+    this.showForm = true;
+  }
+
+  onFormSubmit(itemRequest: ItemRequest): void {
+    if (this.selectedItem) {
+      // Update Item
+      console.log('Updating item:', this.selectedItem.id, itemRequest); // Debug
+      this.itemService.updateItem(this.selectedItem.id, itemRequest).subscribe({
+        next: (updatedItem) => {
+          console.log('Update successful:', updatedItem); // Debug
+          this.loadItems();
+          this.showForm = false;
+        },
+        error: (error) => {
+          console.error('Update error:', error); // Debug
+          this.errorMessage = error.message || 'Failed to update item. Please try again.';
+        }
+      });
+    } else {
+      // Add Item
+      console.log('Adding item:', itemRequest); // Debug
+      this.itemService.addItem(itemRequest).subscribe({
+        next: (newItem) => {
+          console.log('Add successful:', newItem); // Debug
+          this.loadItems();
+          this.showForm = false;
+        },
+        error: (error) => {
+          console.error('Add error:', error); // Debug
+          this.errorMessage = error.message || 'Failed to add item. Please try again.';
+        }
+      });
+    }
+  }
+
+  onFormCancel(): void {
+    this.showForm = false;
+    this.selectedItem = null;
+  }
+
+  deleteItem(id: number): void {
+    if (confirm('Are you sure you want to delete this item?')) {
+      this.itemService.deleteItem(id).subscribe({
+        next: () => {
+          this.loadItems();
+        },
+        error: (error) => {
+          this.errorMessage = error.message || 'Failed to delete item. Please try again.';
+        }
+      });
+    }
   }
 }

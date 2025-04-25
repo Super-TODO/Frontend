@@ -1,58 +1,156 @@
 .container-fluid {
-    position: relative;
-    min-height: 100vh;
-    padding: 0;
-  }
-  
-  .hamburger-btn {
-    position: fixed;
-    top: 15px;
-    right: 15px;
-    z-index: 1000;
-    font-size: 1.8rem;
-    color: #007bff;
-    border: none;
-    background: none;
-    transition: color 0.3s ease;
-  }
-  
-  .hamburger-btn:hover {
-    color: #0056b3;
-  }
-  
-  .sidebar {
-    position: fixed;
-    top: 0;
-    right: -250px; 
-    width: 250px;
-    height: 100vh;
-    background-color: #ffffff;
-    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.05); 
-    transition: right 0.3s ease;
-    z-index: 999;
-  }
-  
-  .sidebar.open {
-    right: 0;
-  }
-  
-  .content {
-    padding: 20px;
-    margin-right: 0; 
-    transition: margin-right 0.3s ease;
-  }
-  
-  .table {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .form-control,
-  .form-select {
-    transition: all 0.3s ease;
-  }
-  
-  .form-control:focus,
-  .form-select:focus {
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-    border-color: #007bff;
-  }
+  position: relative;
+  min-height: 100vh;
+  padding: 0;
+  background-color: #f4f6f9;
+}
+
+.hamburger-btn {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  z-index: 1000;
+  font-size: 1.8rem;
+  color: #2c3e50;
+  border: none;
+  background: none;
+  transition: color 0.3s ease;
+}
+
+.hamburger-btn:hover {
+  color: #3498db;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: -250px;
+  width: 250px;
+  height: 100vh;
+  background-color: #ffffff;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.05);
+  transition: right 0.3s ease;
+  z-index: 999;
+}
+
+.sidebar.open {
+  right: 0;
+}
+
+.content {
+  padding: 30px;
+  margin-right: 0;
+  transition: margin-right 0.3s ease;
+}
+
+h2 {
+  font-size: 2rem;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.form-control {
+  border-radius: 8px;
+  border: 1px solid #dfe6e9;
+  padding: 10px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 8px rgba(52, 152, 219, 0.2);
+  outline: none;
+}
+
+.form-label {
+  font-size: 0.95rem;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.form-select {
+  border-radius: 8px;
+  border: 1px solid #dfe6e9;
+  padding: 10px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-select:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 8px rgba(52, 152, 219, 0.2);
+  outline: none;
+}
+
+.table {
+  background-color: #ffffff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.table th {
+  background-color: #3498db;
+  color: #ffffff;
+  font-weight: 600;
+  padding: 12px;
+}
+
+.table td {
+  padding: 12px;
+  color: #2c3e50;
+  font-size: 0.95rem;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #f9fbfc;
+}
+
+.alert-danger {
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 0.95rem;
+}
+
+.btn-success {
+  background-color: #2ecc71;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-success:hover {
+  background-color: #27ae60;
+  transform: scale(1.02);
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  border-radius: 6px;
+}
+
+.btn-primary {
+  background-color: #3498db;
+  border: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: #2980b9;
+  transform: scale(1.02);
+}
+
+.btn-danger {
+  background-color: #e74c3c;
+  border: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-danger:hover {
+  background-color: #c0392b;
+  transform: scale(1.02);
+}

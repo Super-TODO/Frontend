@@ -1,68 +1,52 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterModule, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { OtpVerificationRequest } from '../../models/auth.model';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-otp-verification',
   templateUrl: './otp-verification.component.html',
   styleUrls: ['./otp-verification.component.scss'],
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterModule
-  ]
+  imports: [CommonModule, FormsModule]
 })
 export class OtpVerificationComponent implements OnInit {
-  otpForm: FormGroup;
-  errorMessage: string | null = null;
-  email: string | null = null;
+  model: OtpVerificationRequest = { email: '', otpCode: '' };
+  error: string | null = null;
+  success: string | null = null;
 
-  constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {
-    this.otpForm = this.fb.group({
-      otpCode: ['', Validators.required]
+  constructor(private auth: AuthService, private router: Router) {}
+
+  ngOnInit() {
+    const email = localStorage.getItem('pendingVerificationEmail');
+    if (email) this.model.email = email;
+    else this.router.navigate(['/register']);
+  }
+
+  resend() {
+    this.clear();
+    this.auth.resendOtp(this.model.email).subscribe({
+      next: () => this.success = 'A new OTP has been sent to your email.',
+      error: e => this.error = e.error?.message || 'Failed to resend OTP.'
     });
   }
 
-  ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      this.email = params['email'] || null;
-      console.log('Email from query params:', this.email);
+  verify() {
+    this.clear();
+    if (!this.model.otpCode) { this.error = 'Please enter the OTP.'; return; }
+    this.auth.verifyOtp(this.model).subscribe({
+      next: res => {
+        this.success = res;
+        localStorage.removeItem('pendingVerificationEmail');
+        this.router.navigate(['/login']);
+      },
+      error: e => this.error = e.error?.message || 'Failed to verify OTP.'
     });
   }
 
-  onSubmit(): void {
-    console.log('Form valid:', this.otpForm.valid); 
-    console.log('Form value:', this.otpForm.value); 
-    console.log('Email:', this.email);
-
-    if (this.otpForm.valid && this.email) {
-      const request = {
-        email: this.email,
-        otpCode: this.otpForm.get('otpCode')?.value
-      };
-      console.log('Sending OTP verification request:', request);
-      this.authService.verifyOtp(request).subscribe({
-        next: (response) => {
-          console.log('OTP verification successful:', response);
-          this.errorMessage = null;
-          this.router.navigate(['/login']);
-        },
-        error: (error) => {
-          console.error('OTP verification error:', error);
-          this.errorMessage = error.status === 400 ? 'Invalid OTP. Please try again.' : 'An error occurred. Please try again later.';
-        }
-      });
-    } else {
-      this.errorMessage = 'Please enter the OTP or ensure the email is provided.';
-      console.log('Form invalid or email missing');
-    }
+  private clear() {
+    this.error = this.success = null;
   }
 }

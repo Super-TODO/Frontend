@@ -69,16 +69,22 @@ export class SidebarComponent implements OnInit {
   }
 
   logout(): void {
-    this.authService.logout().subscribe({
+    const token = this.authService.getAccessToken();
+    if (!token) {
+      this.authService.clearTokens();
+      this.router.navigate(['/login']);
+      return;
+    }
+  
+    this.authService.logout(token).subscribe({
       next: () => {
         this.authService.clearTokens();
         this.router.navigate(['/login']);
       },
-      error: (error) => {
-        console.error('Logout error:', error);
+      error: () => {
         this.authService.clearTokens();
         this.router.navigate(['/login']);
       }
-    });
+    });  
   }
 }

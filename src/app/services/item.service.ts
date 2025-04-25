@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { ItemResponse } from '../models/item.model';
+import { Observable } from 'rxjs';
+import { ItemRequest, ItemResponse } from '../models/item.model';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -16,16 +15,26 @@ export class ItemService {
     private authService: AuthService
   ) {}
 
-  getItems(): Observable<ItemResponse[]> {
+  private getHeaders(): HttpHeaders {
     const token = this.authService.getAccessToken();
-    const headers = new HttpHeaders({
+    return new HttpHeaders({
       'Authorization': token ? `Bearer ${token}` : ''
     });
-    return this.http.get<ItemResponse[]>(this.apiUrl, { headers }).pipe(
-      catchError(error => {
-        console.error('Error fetching items:', error);
-        return throwError(() => new Error('Failed to fetch items. Please try again later.'));
-      })
-    );
+  }
+
+  getItems(): Observable<ItemResponse[]> {
+    return this.http.get<ItemResponse[]>(this.apiUrl, { headers: this.getHeaders() });
+  }
+
+  addItem(item: ItemRequest): Observable<ItemResponse> {
+    return this.http.post<ItemResponse>(this.apiUrl, item, { headers: this.getHeaders() });
+  }
+
+  updateItem(id: number, item: ItemRequest): Observable<ItemResponse> {
+    return this.http.put<ItemResponse>(`${this.apiUrl}/${id}`, item, { headers: this.getHeaders() });
+  }
+
+  deleteItem(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
   }
 }
