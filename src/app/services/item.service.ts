@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ItemRequest, ItemResponse } from '../models/item.model';
 import { AuthService } from './auth.service';
+import { PageResponse } from '../models/Page.model';
 
 @Injectable({
   providedIn: 'root'
@@ -22,8 +23,8 @@ export class ItemService {
     });
   }
 
-  getItems(): Observable<ItemResponse[]> {
-    return this.http.get<ItemResponse[]>(this.apiUrl, { headers: this.getHeaders() });
+  getItems(page: number = 0, size: number = 10): Observable<PageResponse<ItemResponse>> {
+    return this.http.get<PageResponse<ItemResponse>>(`${this.apiUrl}?page=${page}&size=${size}`, { headers: this.getHeaders() });
   }
 
   addItem(item: ItemRequest): Observable<ItemResponse> {

@@ -22,7 +22,6 @@ import { ItemFormComponent } from '../item-form/item-form.component';
 })
 export class ItemListComponent implements OnInit {
   items: ItemResponse[] = [];
-  filteredItems: ItemResponse[] = [];
   searchTerm: string = '';
   statusFilter: Status | '' = '';
   priorityFilter: Priority | '' = '';
@@ -30,6 +29,9 @@ export class ItemListComponent implements OnInit {
   isSidebarOpen: boolean = false;
   showForm: boolean = false;
   selectedItem: ItemResponse | null = null;
+  currentPage: number = 0;
+  totalPages: number = 0;
+  pageSize: number = 10;
 
   constructor(
     private itemService: ItemService,
@@ -42,11 +44,11 @@ export class ItemListComponent implements OnInit {
   }
 
   loadItems(): void {
-    this.itemService.getItems().subscribe({
-      next: (items) => {
-        this.items = items;
+    this.itemService.getItems(this.currentPage, this.pageSize).subscribe({
+      next: (pageData) => {
+        this.items = pageData.content;
+        this.totalPages = pageData.totalPages;
         this.errorMessage = null;
-        this.applyFilters();
       },
       error: (error) => {
         this.errorMessage = error.message || 'Failed to load items. Please try again later.';
@@ -54,35 +56,18 @@ export class ItemListComponent implements OnInit {
     });
   }
 
-  applyFilters(): void {
-    this.filteredItems = this.items.filter(item => {
-      const matchesSearch = this.searchTerm
-        ? item.title.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-          item.description.toLowerCase().includes(this.searchTerm.toLowerCase())
-        : true;
-
-      const matchesStatus = this.statusFilter
-        ? item.status === this.statusFilter
-        : true;
-
-      const matchesPriority = this.priorityFilter
-        ? item.priority === this.priorityFilter
-        : true;
-
-      return matchesSearch && matchesStatus && matchesPriority;
-    });
+  nextPage(): void {
+    if (this.currentPage + 1 < this.totalPages) {
+      this.currentPage++;
+      this.loadItems();
+    }
   }
 
-  onSearchChange(): void {
-    this.applyFilters();
-  }
-
-  onStatusFilterChange(): void {
-    this.applyFilters();
-  }
-
-  onPriorityFilterChange(): void {
-    this.applyFilters();
+  prevPage(): void {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+      this.loadItems();
+    }
   }
 
   toggleSidebar(): void {
@@ -101,30 +86,22 @@ export class ItemListComponent implements OnInit {
 
   onFormSubmit(itemRequest: ItemRequest): void {
     if (this.selectedItem) {
-      // Update Item
-      console.log('Updating item:', this.selectedItem.id, itemRequest); // Debug
       this.itemService.updateItem(this.selectedItem.id, itemRequest).subscribe({
-        next: (updatedItem) => {
-          console.log('Update successful:', updatedItem); // Debug
+        next: () => {
           this.loadItems();
           this.showForm = false;
         },
         error: (error) => {
-          console.error('Update error:', error); // Debug
           this.errorMessage = error.message || 'Failed to update item. Please try again.';
         }
       });
     } else {
-      // Add Item
-      console.log('Adding item:', itemRequest); // Debug
       this.itemService.addItem(itemRequest).subscribe({
-        next: (newItem) => {
-          console.log('Add successful:', newItem); // Debug
+        next: () => {
           this.loadItems();
           this.showForm = false;
         },
         error: (error) => {
-          console.error('Add error:', error); // Debug
           this.errorMessage = error.message || 'Failed to add item. Please try again.';
         }
       });

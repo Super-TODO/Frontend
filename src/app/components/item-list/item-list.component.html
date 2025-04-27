@@ -1,31 +1,25 @@
 <div class="container-fluid position-relative">
-  <!-- Hamburger Menu Button -->
   <button class="hamburger-btn btn btn-link" (click)="toggleSidebar()">
     <i class="fas fa-bars hamburger-icon"></i>
   </button>
 
-  <!-- Sidebar -->
   <div class="sidebar" [ngClass]="{'open': isSidebarOpen}">
     <app-sidebar></app-sidebar>
   </div>
 
-  <!-- Main Content -->
   <div class="content mt-4">
     <h2>Item List</h2>
 
-    <!-- Error Message -->
     <div *ngIf="errorMessage" class="alert alert-danger">
       {{ errorMessage }}
     </div>
 
-    <!-- Add Item Button -->
     <div class="mb-3">
       <button class="btn btn-success" (click)="showAddForm()">
         <i class="fas fa-plus me-2"></i> Add Item
       </button>
     </div>
 
-    <!-- Item Form (for Add/Update) -->
     <div *ngIf="showForm" class="mb-4">
       <app-item-form
         [item]="selectedItem"
@@ -34,18 +28,15 @@
       ></app-item-form>
     </div>
 
-    <!-- Search Bar -->
     <div class="mb-3">
       <input
         type="text"
         class="form-control"
         placeholder="Search by title or description..."
         [(ngModel)]="searchTerm"
-        (ngModelChange)="onSearchChange()"
       />
     </div>
 
-    <!-- Filters -->
     <div class="row mb-3">
       <div class="col-md-6">
         <label for="statusFilter" class="form-label">Filter by Status:</label>
@@ -53,7 +44,6 @@
           id="statusFilter"
           class="form-select"
           [(ngModel)]="statusFilter"
-          (ngModelChange)="onStatusFilterChange()"
         >
           <option value="">All</option>
           <option value="TODO">To Do</option>
@@ -67,7 +57,6 @@
           id="priorityFilter"
           class="form-select"
           [(ngModel)]="priorityFilter"
-          (ngModelChange)="onPriorityFilterChange()"
         >
           <option value="">All</option>
           <option value="LOW">Low</option>
@@ -77,7 +66,6 @@
       </div>
     </div>
 
-    <!-- Items Table -->
     <table class="table table-striped">
       <thead>
         <tr>
@@ -89,7 +77,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of filteredItems">
+        <tr *ngFor="let item of items">
           <td>{{ item.title }}</td>
           <td>{{ item.description }}</td>
           <td>{{ item.status }}</td>
@@ -103,10 +91,13 @@
             </button>
           </td>
         </tr>
-        <tr *ngIf="filteredItems.length === 0 && !errorMessage">
-          <td colspan="5" class="text-center">No items found.</td>
-        </tr>
       </tbody>
     </table>
+
+    <div class="d-flex justify-content-center align-items-center my-3">
+      <button class="btn btn-secondary me-2" (click)="prevPage()" [disabled]="currentPage === 0">Previous</button>
+      <span>Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+      <button class="btn btn-secondary ms-2" (click)="nextPage()" [disabled]="currentPage + 1 >= totalPages">Next</button>
+    </div>
   </div>
 </div>
